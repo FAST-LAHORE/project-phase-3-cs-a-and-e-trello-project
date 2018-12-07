@@ -32,16 +32,11 @@ public class Card {
     MembersAssigned=new ArrayList<String>();
      name=n;
     }
-    boolean AddCheckList(){
-         boolean flag=false;
-        
-        
-        return flag;
+        public void addchecklisttocard(String x){
+        CheckList cl=new CheckList(x);
+        CheckListIncluded.add(cl);
     }
-    ArrayList<String> getmembersassigned(){
-    return MembersAssigned;    
-    }
-    ArrayList<String> getchecklist(){
+            ArrayList<String> getchecklist(){
             ArrayList<String> c1=new ArrayList<>();
             for (int i=0;i<CheckListIncluded.size();i++){
                 c1.add(CheckListIncluded.get(i).name);
@@ -51,6 +46,16 @@ public class Card {
     }
     ArrayList<CheckList> getchecklist2(){
         return CheckListIncluded;
+    }
+
+    boolean AddCheckList(){
+         boolean flag=false;
+        
+        
+        return flag;
+    }
+    ArrayList<String> getmembersassigned(){
+    return MembersAssigned;    
     }
     String getname(){
         return name;
@@ -79,10 +84,6 @@ public class Card {
     }
     public void addmemberTocard(String x){
         MembersAssigned.add(x);
-    }
-    public void addchecklisttocard(String x){
-        CheckList cl=new CheckList(x);
-        CheckListIncluded.add(cl);
     }
     boolean AssignToMember(){
          boolean flag=false;

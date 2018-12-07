@@ -22,7 +22,65 @@ public class Team_Management {
     public Team_Management() {
         TeamsMade=new ArrayList<Team>() ;
     }
-    public static Team_Management getinstancetillchecklist(){
+    public static Team_Management getinstancetillassignedmembers(){
+        TeamsMade=new ArrayList<Team>();
+                Connection myConnection =null;
+    
+     Statement myStatement=null;
+     ResultSet myResult=null;
+     ResultSet myResult2=null;
+     ResultSet myResult3=null;
+     ResultSet myResult4=null;
+  String url = "jdbc:derby://localhost:1527/TrelloApp";
+        try{
+            myConnection = DriverManager.getConnection(url,"ubaid","12345");
+            myStatement = myConnection.createStatement();
+            myResult = myStatement.executeQuery("Select * from AllTeams ");
+            while(myResult.next())  {
+             addTeam(myResult.getString(1));
+            //System.out.println(myResult.getString(1));
+            }
+            
+            for (int i=0;i<gettotalteams();i++){
+                 myResult = myStatement.executeQuery("Select Members from "+TeamsMade.get(i).getName()+" where Members is not null ");
+                 while(myResult.next()){
+                      TeamsMade.get(i).adduser(myResult.getString(1));
+                    
+                 }
+                 myResult2=myStatement.executeQuery("Select ListNames from "+TeamsMade.get(i).getName()+" where ListNames is not null ");
+                 
+                 while(myResult2.next()){
+                     List l=new List(myResult2.getString(1));
+                     TeamsMade.get(i).addlist(l);
+                 }
+                 for (int j=0;j<TeamsMade.get(i).getLists().size();j++){
+                     myResult3=myStatement.executeQuery("Select cardname from "+TeamsMade.get(i).getName()+TeamsMade.get(i).getLists().get(j).getname()+" where cardname is not null ");
+                     while(myResult3.next()){
+                         Card c=new Card(myResult3.getString(1));
+                         TeamsMade.get(i).getLists().get(j).addcard(c);
+                         //System.out.println(myResult3.getString(1));
+                     }
+                     
+                     for (int k=0;k<TeamsMade.get(i).getLists().get(j).getcards().size();k++){
+                          myResult4=myStatement.executeQuery("Select Members from "+TeamsMade.get(i).getName()+TeamsMade.get(i).getLists().get(j).getname()+TeamsMade.get(i).getLists().get(j).getcards().get(k).getname()+" where Members is not null ");
+                         while(myResult4.next()){
+                            // System.out.println(myResult4.getString(1));
+                             TeamsMade.get(i).getLists().get(j).getcards().get(k).addmemberTocard(myResult4.getString(1));
+                         }
+                         
+                     }
+                     
+                 }
+            }
+        }
+                catch(SQLException E){
+            E.printStackTrace();
+            System.out.println("Connection not made");
+        }
+
+        return instance;
+    }
+        public static Team_Management getinstancetillchecklist(){
         TeamsMade=new ArrayList<Team>();
                 Connection myConnection =null;
     
@@ -85,7 +143,50 @@ public class Team_Management {
 
         return instance;
     }
-        public static Team_Management getinstancetillitems(){
+            public ArrayList<String > getchecklist(String x,String x2,String x3){
+        ArrayList<String> y=new ArrayList<>();
+        for (int i=0;i<TeamsMade.size();i++){
+            if(TeamsMade.get(i).getName().equals(x)){
+                for (int j=0;j<TeamsMade.get(i).getLists().size();j++){
+                 if(x2.equals(TeamsMade.get(i).getLists().get(j).getname())){
+                     for(int k=0;k<TeamsMade.get(i).getLists().get(j).getcards().size();k++){
+                         if(TeamsMade.get(i).getLists().get(j).getcards().get(k).getname().equals(x3)){
+                             for (int l=0;l<TeamsMade.get(i).getLists().get(j).getcards().get(k).getchecklist().size();l++){
+                                 y.add(TeamsMade.get(i).getLists().get(j).getcards().get(k).getchecklist().get(l));
+                             }
+                         }
+                     }
+                 }
+                }
+            }
+        }
+        return y;
+    }
+                public ArrayList<String > getitems(String x,String x2,String x3,String x4){
+        ArrayList<String> y=new ArrayList<>();
+        for (int i=0;i<TeamsMade.size();i++){
+            if(TeamsMade.get(i).getName().equals(x)){
+                for (int j=0;j<TeamsMade.get(i).getLists().size();j++){
+                 if(x2.equals(TeamsMade.get(i).getLists().get(j).getname())){
+                     for(int k=0;k<TeamsMade.get(i).getLists().get(j).getcards().size();k++){
+                         if(TeamsMade.get(i).getLists().get(j).getcards().get(k).getname().equals(x3)){
+                             for (int l=0;l<TeamsMade.get(i).getLists().get(j).getcards().get(k).getchecklist2().size();l++){
+                                 if(x4.equals(TeamsMade.get(i).getLists().get(j).getcards().get(k).getchecklist2().get(l).name)){
+                                        for (int m=0;m<TeamsMade.get(i).getLists().get(j).getcards().get(k).getchecklist2().get(l).ItemsIncluded.size();m++){
+                                            y.add(TeamsMade.get(i).getLists().get(j).getcards().get(k).getchecklist2().get(l).ItemsIncluded.get(m).name);
+                                        }
+                                 }
+                                 
+                             }
+                         }
+                     }
+                 }
+                }
+            }
+        }
+        return y;
+    }
+            public static Team_Management getinstancetillitems(){
         TeamsMade=new ArrayList<Team>();
                 Connection myConnection =null;
     
@@ -158,64 +259,6 @@ public class Team_Management {
         return instance;
     }
 
-    public static Team_Management getinstancetillassignedmembers(){
-        TeamsMade=new ArrayList<Team>();
-                Connection myConnection =null;
-    
-     Statement myStatement=null;
-     ResultSet myResult=null;
-     ResultSet myResult2=null;
-     ResultSet myResult3=null;
-     ResultSet myResult4=null;
-  String url = "jdbc:derby://localhost:1527/TrelloApp";
-        try{
-            myConnection = DriverManager.getConnection(url,"ubaid","12345");
-            myStatement = myConnection.createStatement();
-            myResult = myStatement.executeQuery("Select * from AllTeams ");
-            while(myResult.next())  {
-             addTeam(myResult.getString(1));
-            //System.out.println(myResult.getString(1));
-            }
-            
-            for (int i=0;i<gettotalteams();i++){
-                 myResult = myStatement.executeQuery("Select Members from "+TeamsMade.get(i).getName()+" where Members is not null ");
-                 while(myResult.next()){
-                      TeamsMade.get(i).adduser(myResult.getString(1));
-                    
-                 }
-                 myResult2=myStatement.executeQuery("Select ListNames from "+TeamsMade.get(i).getName()+" where ListNames is not null ");
-                 
-                 while(myResult2.next()){
-                     List l=new List(myResult2.getString(1));
-                     TeamsMade.get(i).addlist(l);
-                 }
-                 for (int j=0;j<TeamsMade.get(i).getLists().size();j++){
-                     myResult3=myStatement.executeQuery("Select cardname from "+TeamsMade.get(i).getName()+TeamsMade.get(i).getLists().get(j).getname()+" where cardname is not null ");
-                     while(myResult3.next()){
-                         Card c=new Card(myResult3.getString(1));
-                         TeamsMade.get(i).getLists().get(j).addcard(c);
-                         //System.out.println(myResult3.getString(1));
-                     }
-                     
-                     for (int k=0;k<TeamsMade.get(i).getLists().get(j).getcards().size();k++){
-                          myResult4=myStatement.executeQuery("Select Members from "+TeamsMade.get(i).getName()+TeamsMade.get(i).getLists().get(j).getname()+TeamsMade.get(i).getLists().get(j).getcards().get(k).getname()+" where Members is not null ");
-                         while(myResult4.next()){
-                            // System.out.println(myResult4.getString(1));
-                             TeamsMade.get(i).getLists().get(j).getcards().get(k).addmemberTocard(myResult4.getString(1));
-                         }
-                         
-                     }
-                     
-                 }
-            }
-        }
-                catch(SQLException E){
-            E.printStackTrace();
-            System.out.println("Connection not made");
-        }
-
-        return instance;
-    }
     public static Team_Management getinstancetillcardnames(){
         TeamsMade=new ArrayList<Team>();
                 Connection myConnection =null;
@@ -419,49 +462,6 @@ public class Team_Management {
         }
         return y;
     }
-    public ArrayList<String > getchecklist(String x,String x2,String x3){
-        ArrayList<String> y=new ArrayList<>();
-        for (int i=0;i<TeamsMade.size();i++){
-            if(TeamsMade.get(i).getName().equals(x)){
-                for (int j=0;j<TeamsMade.get(i).getLists().size();j++){
-                 if(x2.equals(TeamsMade.get(i).getLists().get(j).getname())){
-                     for(int k=0;k<TeamsMade.get(i).getLists().get(j).getcards().size();k++){
-                         if(TeamsMade.get(i).getLists().get(j).getcards().get(k).getname().equals(x3)){
-                             for (int l=0;l<TeamsMade.get(i).getLists().get(j).getcards().get(k).getchecklist().size();l++){
-                                 y.add(TeamsMade.get(i).getLists().get(j).getcards().get(k).getchecklist().get(l));
-                             }
-                         }
-                     }
-                 }
-                }
-            }
-        }
-        return y;
-    }
-    public ArrayList<String > getitems(String x,String x2,String x3,String x4){
-        ArrayList<String> y=new ArrayList<>();
-        for (int i=0;i<TeamsMade.size();i++){
-            if(TeamsMade.get(i).getName().equals(x)){
-                for (int j=0;j<TeamsMade.get(i).getLists().size();j++){
-                 if(x2.equals(TeamsMade.get(i).getLists().get(j).getname())){
-                     for(int k=0;k<TeamsMade.get(i).getLists().get(j).getcards().size();k++){
-                         if(TeamsMade.get(i).getLists().get(j).getcards().get(k).getname().equals(x3)){
-                             for (int l=0;l<TeamsMade.get(i).getLists().get(j).getcards().get(k).getchecklist2().size();l++){
-                                 if(x4.equals(TeamsMade.get(i).getLists().get(j).getcards().get(k).getchecklist2().get(l).name)){
-                                        for (int m=0;m<TeamsMade.get(i).getLists().get(j).getcards().get(k).getchecklist2().get(l).ItemsIncluded.size();m++){
-                                            y.add(TeamsMade.get(i).getLists().get(j).getcards().get(k).getchecklist2().get(l).ItemsIncluded.get(m).name);
-                                        }
-                                 }
-                                 
-                             }
-                         }
-                     }
-                 }
-                }
-            }
-        }
-        return y;
-    }
     public void assignmember(String x,String x2,String x3,String x4){
          for (int i=0;i<TeamsMade.size();i++){
             if(TeamsMade.get(i).getName().equals(x)){
@@ -560,6 +560,44 @@ public class Team_Management {
                     if(TeamsMade.get(i).getLists().get(j).getname().equals(y)){
                         Card c=new Card(z);
                         TeamsMade.get(i).getLists().get(j).addcard(c);
+                    }
+                }
+                
+            }
+        }
+    }
+    public void addchecklist(String x,String y,String z,String a){
+        for (int i=0;i<TeamsMade.size();i++){
+            if(TeamsMade.get(i).getName().equals(x)){
+                for (int j=0;j<TeamsMade.get(i).getLists().size();j++){
+                    if(TeamsMade.get(i).getLists().get(j).getname().equals(y)){
+                         for (int k=0;k<TeamsMade.get(i).getLists().get(j).CardsIncluded.size();k++){
+                             if(TeamsMade.get(i).getLists().get(j).CardsIncluded.get(k).equals(z)){
+                                 
+                                 TeamsMade.get(i).getLists().get(j).CardsIncluded.get(k).addchecklisttocard(a);
+                             }
+                         }
+                    }
+                }
+                
+            }
+        }
+    }
+    public void additem(String x,String y,String z,String a,String b){
+        for (int i=0;i<TeamsMade.size();i++){
+            if(TeamsMade.get(i).getName().equals(x)){
+                for (int j=0;j<TeamsMade.get(i).getLists().size();j++){
+                    if(TeamsMade.get(i).getLists().get(j).getname().equals(y)){
+                         for (int k=0;k<TeamsMade.get(i).getLists().get(j).CardsIncluded.size();k++){
+                             if(TeamsMade.get(i).getLists().get(j).CardsIncluded.get(k).equals(z)){
+                                 
+                                 for (int m=0;m<TeamsMade.get(i).getLists().get(j).CardsIncluded.get(k).getchecklist2().size();m++){
+                                     if(TeamsMade.get(i).getLists().get(j).CardsIncluded.get(k).getchecklist2().get(m).name.equals(a)){
+                                         TeamsMade.get(i).getLists().get(j).CardsIncluded.get(k).getchecklist2().get(m).AddItem(b);
+                                     }
+                                 }
+                             }
+                         }
                     }
                 }
                 
