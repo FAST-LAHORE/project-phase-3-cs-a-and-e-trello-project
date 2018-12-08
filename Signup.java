@@ -334,48 +334,53 @@ return builder.toString();
                         if(validate(jTextField2.getText())){
                             
                                                 if(!um.CheckEmail(jTextField2.getText())){
-                                                 myConnection =null;
+                                                    if(!um.CheckUsername(jTextField1.getText())){
+                                                         myConnection =null;
 
-                                                  myStatement=null;
-                                                  myResult=null;
-                                                 
-                                                    try{
-                                                        String password=new String(jPasswordField1.getPassword());
-                                                       // System.out.println(password);
-                                                        
-                                                        String y1=randomAlphaNumeric(12);
-                                                        
-                                                        send(jTextField2.getText(),"Account confimation","Hey "+jTextField1.getText()+" You are "
-                                                                + "receiving this email because you signed up on Trello the code is  "+y1+" Have a nice day","trelloubaid@gmail.com","wow987654321");
-                                                        String y2 = JOptionPane.showInputDialog(this,"Enter the code send to you on the email", null);
-                                                        
-                                                        if(y1.equals(y2)){
-                                                        myConnection = DriverManager.getConnection(url,"ubaid","12345");
-                                                        myStatement = myConnection.createStatement();
-                                                        myStatement.executeUpdate("Insert into Users values ('"
-                                                                +jTextField2.getText()+"','"+jTextField1.getText()
-                                                                +"','"+password+"')");
-                                                        
-                                                        send(jTextField2.getText(),"Welcome to Trello","Hey "+jTextField1.getText()
-                                                                +" We are so happy you're here."
-                                                                + " The concept is simple Trello helps you get organized"
-                                                                        + ",get motivated and get more done."
-                                                                + "We are excited to have you on board. If you have"
-                                                                 + " any queries you can always contact Trello support."
-                                                                + " Have a nice day","trelloubaid@gmail.com","wow987654321");
-                                                            LogIn lg=new LogIn();
-                                                            lg.setVisible(true);
-                                                            this.dispose();
-                                                        }
-                                                        else{
-                                                            JOptionPane.showMessageDialog(this, "You have entered the wrong code try again" );
-                                                        }
+                                                          myStatement=null;
+                                                          myResult=null;
+
+                                                            try{
+                                                                String password=new String(jPasswordField1.getPassword());
+                                                               // System.out.println(password);
+
+                                                                String y1=randomAlphaNumeric(12);
+
+                                                                send(jTextField2.getText(),"Account confimation","Hey "+jTextField1.getText()+" You are "
+                                                                        + "receiving this email because you signed up on Trello the code is  "+y1+" Have a nice day","trelloubaid@gmail.com","wow987654321");
+                                                                String y2 = JOptionPane.showInputDialog(this,"Enter the code send to you on the email", null);
+
+                                                                if(y1.equals(y2)){
+                                                                myConnection = DriverManager.getConnection(url,"ubaid","12345");
+                                                                myStatement = myConnection.createStatement();
+                                                                myStatement.executeUpdate("Insert into Users values ('"
+                                                                        +jTextField2.getText()+"','"+jTextField1.getText()
+                                                                        +"','"+password+"')");
+
+                                                                send(jTextField2.getText(),"Welcome to Trello","Hey "+jTextField1.getText()
+                                                                        +" We are so happy you're here."
+                                                                        + " The concept is simple Trello helps you get organized"
+                                                                                + ",get motivated and get more done."
+                                                                        + "We are excited to have you on board. If you have"
+                                                                         + " any queries you can always contact Trello support."
+                                                                        + " Have a nice day","trelloubaid@gmail.com","wow987654321");
+                                                                    LogIn lg=new LogIn();
+                                                                    lg.setVisible(true);
+                                                                    this.dispose();
+                                                                }
+                                                                else{
+                                                                    JOptionPane.showMessageDialog(this, "You have entered the wrong code try again" );
+                                                                }
+                                                            }
+                                                                    catch(SQLException E){
+                                                                E.printStackTrace();
+                                                                System.out.println("Connection not made");
+                                                            }
                                                     }
-                                                            catch(SQLException E){
-                                                        E.printStackTrace();
-                                                        System.out.println("Connection not made");
+                                                    else{
+                                                        JOptionPane.showMessageDialog(this, "This Username already exists" );
                                                     }
-                                                }
+                                                }//ending of check email
                                                 else{
                                                     JOptionPane.showMessageDialog(this, "This Email already exists" );
                                                 }

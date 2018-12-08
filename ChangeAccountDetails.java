@@ -21,11 +21,13 @@ public class ChangeAccountDetails extends javax.swing.JFrame {
      * Creates new form ChangeAccountDetails
      */
     User user1;
+    User_Management um;
     public ChangeAccountDetails() {
         initComponents();
     }
     public ChangeAccountDetails(User u1){
         user1=u1;
+        um=User_Management.getInstance();
         initComponents();
         setResizable(false);
     }
@@ -209,23 +211,32 @@ public class ChangeAccountDetails extends javax.swing.JFrame {
                          JOptionPane.showMessageDialog(this, "Password should consist of at least 8 characters" );
                     }
                     else{
-                          Connection myConnection =null;
+                            boolean flag=false;
+                            if(user1.getName().equals(jTextField1.getText())){
+                                flag=true;
+                            }
+                            if(!flag&&um.CheckUsername(jTextField1.getText())){
+                                 JOptionPane.showMessageDialog(this, "This Username is already taken" );
+                            }
+                            else{
+                                     Connection myConnection =null;
 
-             Statement myStatement=null;
-             ResultSet myResult=null;
-             String url = "jdbc:derby://localhost:1527/TrelloApp";
-             try{
-            myConnection = DriverManager.getConnection(url,"ubaid","12345");
-            myStatement = myConnection.createStatement();
-             myStatement.executeUpdate("Update Users set name='"+jTextField1.getText()+"',password='"+new String(jPasswordField1.getPassword())+"' where email='"+user1.getEmail()+"'");
-              user1.setName(jTextField1.getText());user1.setPassword(new String(jPasswordField1.getPassword()));
-             JOptionPane.showMessageDialog(this, "Account Details Updated" );
-            
-             }
-             catch(SQLException E){
-                 E.printStackTrace();
-             }
-             }
+                                     Statement myStatement=null;
+                                     ResultSet myResult=null;
+                                     String url = "jdbc:derby://localhost:1527/TrelloApp";
+                                     try{
+                                    myConnection = DriverManager.getConnection(url,"ubaid","12345");
+                                    myStatement = myConnection.createStatement();
+                                     myStatement.executeUpdate("Update Users set name='"+jTextField1.getText()+"',password='"+new String(jPasswordField1.getPassword())+"' where email='"+user1.getEmail()+"'");
+                                      user1.setName(jTextField1.getText());user1.setPassword(new String(jPasswordField1.getPassword()));
+                                     JOptionPane.showMessageDialog(this, "Account Details Updated" );
+
+                                     }
+                                     catch(SQLException E){
+                                         E.printStackTrace();
+                                     }
+                            }
+             }//ending of else statement
             }
        }
     }//GEN-LAST:event_jLabel5MousePressed
