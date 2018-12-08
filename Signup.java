@@ -315,7 +315,81 @@ return builder.toString();
 
     private void jLabel5MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MousePressed
         // TODO add your handling code here:
- 
+        if(jTextField1.getText().equals("")){
+            JOptionPane.showMessageDialog(this, "Please Enter name first" );
+        }
+        else{
+            if(jTextField2.getText().equals("")){
+                JOptionPane.showMessageDialog(this, "Please Enter an email first" );
+            }
+            else{
+                if(new String(jPasswordField1.getPassword()).equals("")){
+                    JOptionPane.showMessageDialog(this, "Please Enter a password first" );
+                }
+                else{
+                    if(new String(jPasswordField1.getPassword()).length()<8){
+                         JOptionPane.showMessageDialog(this, "Password should consist of at least 8 characters" );
+                    }
+                    else{
+                        if(validate(jTextField2.getText())){
+                            
+                                                if(!um.CheckEmail(jTextField2.getText())){
+                                                 myConnection =null;
+
+                                                  myStatement=null;
+                                                  myResult=null;
+                                                 
+                                                    try{
+                                                        String password=new String(jPasswordField1.getPassword());
+                                                       // System.out.println(password);
+                                                        
+                                                        String y1=randomAlphaNumeric(12);
+                                                        
+                                                        send(jTextField2.getText(),"Account confimation","Hey "+jTextField1.getText()+" You are "
+                                                                + "receiving this email because you signed up on Trello the code is  "+y1+" Have a nice day","trelloubaid@gmail.com","wow987654321");
+                                                        String y2 = JOptionPane.showInputDialog(this,"Enter the code send to you on the email", null);
+                                                        
+                                                        if(y1.equals(y2)){
+                                                        myConnection = DriverManager.getConnection(url,"ubaid","12345");
+                                                        myStatement = myConnection.createStatement();
+                                                        myStatement.executeUpdate("Insert into Users values ('"
+                                                                +jTextField2.getText()+"','"+jTextField1.getText()
+                                                                +"','"+password+"')");
+                                                        
+                                                        send(jTextField2.getText(),"Welcome to Trello","Hey "+jTextField1.getText()
+                                                                +" We are so happy you're here."
+                                                                + " The concept is simple Trello helps you get organized"
+                                                                        + ",get motivated and get more done."
+                                                                + "We are excited to have you on board. If you have"
+                                                                 + " any queries you can always contact Trello support."
+                                                                + " Have a nice day","trelloubaid@gmail.com","wow987654321");
+                                                            LogIn lg=new LogIn();
+                                                            lg.setVisible(true);
+                                                            this.dispose();
+                                                        }
+                                                        else{
+                                                            JOptionPane.showMessageDialog(this, "You have entered the wrong code try again" );
+                                                        }
+                                                    }
+                                                            catch(SQLException E){
+                                                        E.printStackTrace();
+                                                        System.out.println("Connection not made");
+                                                    }
+                                                }
+                                                else{
+                                                    JOptionPane.showMessageDialog(this, "This Email already exists" );
+                                                }
+                            
+                            //ending of validate
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(this, "The Email is incorrect" );
+                        }
+                    }
+                }
+            }
+        }
+        
         
     }//GEN-LAST:event_jLabel5MousePressed
 
