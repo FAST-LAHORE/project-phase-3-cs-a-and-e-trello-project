@@ -297,7 +297,7 @@ public class AssignMember extends javax.swing.JFrame {
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         // TODO add your handling code here:
-            CardDisplay cd =new CardDisplay(teamname,listname,cardname,user1);
+            CardDisplayC cd =new CardDisplayC(teamname,listname,cardname,user1);
             cd.setVisible(true);
             this.dispose();
 
